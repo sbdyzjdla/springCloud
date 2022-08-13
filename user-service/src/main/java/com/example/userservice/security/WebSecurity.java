@@ -29,9 +29,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {  //권한관련
         http.csrf().disable();
+//        String IP = "172.16.101.154";
 //        http.authorizeHttpRequests().antMatchers("/users/**").permitAll();
         http.authorizeRequests().antMatchers("/**")
-                .hasIpAddress("172.16.101.154")
+                .hasIpAddress("192.168.0.6")
+//                .access("hasIpAddress('"+IP+"')")
                 .and()
                 .addFilter(getAuthenticationFilter());
 
@@ -39,8 +41,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     private AuthenticationFilter getAuthenticationFilter() throws Exception{
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
-        authenticationFilter.setAuthenticationManager(authenticationManager());
+        AuthenticationFilter authenticationFilter =
+                new AuthenticationFilter(authenticationManager(), userService, env);
+//        authenticationFilter.setAuthenticationManager(authenticationManager());
 
         return authenticationFilter;
     }
